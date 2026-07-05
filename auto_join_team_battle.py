@@ -67,6 +67,7 @@ TOKEN = os.environ.get("LICHESS_TOKEN", "DEIN_API_TOKEN_HIER")
 # Turnieren beigetreten werden soll.
 CREATOR_TEAMS = {
     "seyed111": ["darkonblitz-dob", "darkonteams"],
+    "DarkOnCrack": ["darkonblitz-dob", "darkonteams", "german11"],
     "Nathanael01": ["DarkOnUltra", "DarkOnTeams"],
     "FRCCENTER": ["DarkOnVariants"],
     "Gouravprithyani": ["DarkOnBlitz-dob", "german11"],
