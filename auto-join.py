@@ -2,37 +2,32 @@
 """
 auto_join_team_battle.py
 
-Überwacht einen bestimmten Lichess-User (den "Ersteller") auf neu erstellte
-Turniere/Team-Battles und tritt automatisch mit deinem Team bei.
+Prüft EINMAL, ob ein bestimmter Lichess-User (der "Ersteller") ein neues
+Turnier/Team-Battle angelegt hat, und tritt automatisch mit deinem Team bei.
+
+Gedacht für den Einsatz in einer GitHub Action mit Cron-Trigger (z.B. alle
+15 Minuten) statt als Dauer-Loop - siehe .github/workflows/auto-join.yml.
 
 Voraussetzungen:
     Keine externen Pakete nötig - nutzt nur die Python-Standardbibliothek.
 
-Konfiguration:
-    Trage unten bei CONFIG deine Werte ein, oder setze die entsprechenden
-    Umgebungsvariablen (empfohlen, damit der Token nicht im Code steht):
+Konfiguration (Umgebungsvariablen, z.B. als GitHub Secrets):
+        LICHESS_TOKEN    -> API-Token mit Scope "tournament:write"
+        LICHESS_TEAM_ID  -> Team-Slug aus der lichess.org/team/<slug> URL
+        LICHESS_CREATOR  -> Username des Erstellers der Team-Battles
 
-        export LICHESS_TOKEN="dein_api_token"
-        export LICHESS_TEAM_ID="dein-team-id"
-        export LICHESS_CREATOR="username_des_erstellers"
+Token erstellen unter: https://lichess.org/account/oauth/token
 
-Der API-Token braucht den Scope "tournament:write".
-Erstellen unter: https://lichess.org/account/oauth/token
-
-Ausführen:
+Ausführen (einmaliger Durchlauf):
     python3 auto_join_team_battle.py
 
-Das Skript läuft dauerhaft (Endlosschleife) und prüft alle POLL_INTERVAL
-Sekunden, ob der Ersteller ein neues Turnier angelegt hat. Für jedes neue
-Turnier wird versucht, mit dem konfigurierten Team beizutreten.
-
-Bereits gesehene Turnier-IDs werden in SEEN_FILE gespeichert, damit bei einem
-Neustart nicht erneut versucht wird, alten Turnieren beizutreten.
+Bereits gesehene Turnier-IDs werden in SEEN_FILE gespeichert. Damit das
+zwischen GitHub-Action-Läufen erhalten bleibt, committed der Workflow diese
+Datei nach jedem Lauf zurück ins Repo (siehe Workflow-Datei).
 """
 
 import json
 import os
-import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -42,10 +37,9 @@ from pathlib import Path
 # CONFIG - hier anpassen oder per Umgebungsvariable setzen
 # ---------------------------------------------------------------------------
 TOKEN = os.environ.get("LICHESS_TOKEN", "DEIN_API_TOKEN_HIER")
-TEAM_ID = os.environ.get("LICHESS_TEAM_ID", "dein-team-id")
-CREATOR = os.environ.get("LICHESS_CREATOR", "username_des_erstellers")
+TEAM_ID = os.environ.get("LICHESS_TEAM_ID", "darkonrapid")
+CREATOR = os.environ.get("LICHESS_CREATOR", "M_milan2015")
 
-POLL_INTERVAL = 60  # Sekunden zwischen den Checks
 SEEN_FILE = Path("seen_tournaments.json")
 
 BASE_URL = "https://lichess.org"
@@ -112,37 +106,37 @@ def main() -> None:
         return
 
     seen = load_seen()
-    print(f"Starte Überwachung von '{CREATOR}' ... "
+    print(f"Prüfe Turniere von '{CREATOR}' ... "
           f"({len(seen)} Turniere bereits bekannt)")
 
-    while True:
-        try:
-            tournaments = get_created_tournaments(CREATOR)
-        except (urllib.error.URLError, urllib.error.HTTPError) as exc:
-            print(f"[WARNUNG] Abfrage fehlgeschlagen: {exc}")
-            time.sleep(POLL_INTERVAL)
+    try:
+        tournaments = get_created_tournaments(CREATOR)
+    except (urllib.error.URLError, urllib.error.HTTPError) as exc:
+        print(f"[WARNUNG] Abfrage fehlgeschlagen: {exc}")
+        return
+
+    new_count = 0
+    for t in tournaments:
+        t_id = t.get("id")
+        if not t_id or t_id in seen:
             continue
 
-        for t in tournaments:
-            t_id = t.get("id")
-            if not t_id or t_id in seen:
-                continue
+        # Nur Turniere, die noch nicht beendet sind, sind sinnvoll
+        status = t.get("status")  # 10=created, 20=started, 30=finished
+        if status == 30:
+            seen.add(t_id)
+            continue
 
-            # Nur Turniere, die noch nicht beendet sind, sind sinnvoll
-            status = t.get("status")  # 10=created, 20=started, 30=finished
-            if status == 30:
-                seen.add(t_id)
-                continue
+        print(f"Neues Turnier gefunden: {t_id} "
+              f"(Name: {t.get('fullName', '?')})")
 
-            print(f"Neues Turnier gefunden: {t_id} "
-                  f"(Name: {t.get('fullName', '?')})")
+        success = join_tournament(t_id, TEAM_ID)
+        if success:
+            seen.add(t_id)
+            new_count += 1
 
-            success = join_tournament(t_id, TEAM_ID)
-            if success:
-                seen.add(t_id)
-                save_seen(seen)
-
-        time.sleep(POLL_INTERVAL)
+    save_seen(seen)
+    print(f"Fertig. {new_count} neue(s) Turnier(e) beigetreten.")
 
 
 if __name__ == "__main__":
