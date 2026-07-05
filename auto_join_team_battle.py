@@ -37,8 +37,8 @@ from pathlib import Path
 # CONFIG - hier anpassen oder per Umgebungsvariable setzen
 # ---------------------------------------------------------------------------
 TOKEN = os.environ.get("LICHESS_TOKEN", "DEIN_API_TOKEN_HIER")
-TEAM_ID = os.environ.get("LICHESS_TEAM_ID", "darkonrapid")
-CREATOR = os.environ.get("LICHESS_CREATOR", "M_milan2015")
+TEAM_ID = "darkonrapid"
+CREATOR = "m_milan2015"
 
 SEEN_FILE = Path("seen_tournaments.json")
 
