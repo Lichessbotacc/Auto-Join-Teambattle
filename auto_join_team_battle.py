@@ -26,6 +26,11 @@ Konfiguration:
     neue Turnier wird mit allen zugeordneten Teams beigetreten (sofern dein
     Account Mitglied in diesen Teams ist).
 
+    WICHTIG: Es werden ausschließlich Team-Battle-Turniere berücksichtigt.
+    Normale Arena-Turniere (ohne Team-Battle-Modus) werden komplett
+    ignoriert - auch nicht in seen_tournaments.json eingetragen -, da man
+    dort nicht "mit einem Team" beitreten kann.
+
     Optional: TEAM_KEYWORDS erlaubt es, ein Team nur bei einer bestimmten
     Zeitkontrolle beitreten zu lassen (ultrabullet/bullet/blitz/rapid/
     classical) - basierend auf der tatsächlichen Bedenkzeit des Turniers,
@@ -235,6 +240,7 @@ def main() -> None:
     grand_join_fail = 0
     grand_already_done = 0
     grand_already_finished = 0
+    grand_skipped_arenas = 0
 
     for creator, team_ids in CREATOR_TEAMS.items():
         print()
@@ -257,6 +263,13 @@ def main() -> None:
         for t in tournaments:
             t_id = t.get("id")
             if not t_id:
+                continue
+
+            # Nur Team-Battles berücksichtigen - normale Arena-Turniere
+            # (ohne "teamBattle"-Feld im Turnier-Objekt) werden komplett
+            # ignoriert, da man dort nicht "mit einem Team" beitritt.
+            if not t.get("teamBattle"):
+                grand_skipped_arenas += 1
                 continue
 
             entry = seen.get(t_id, {"finished": False, "joined_teams": []})
@@ -361,6 +374,7 @@ def main() -> None:
     print(f"  Team-Beitritte fehlgeschlagen:    {grand_join_fail}")
     print(f"  Turniere komplett (übersprungen): {grand_already_done}")
     print(f"  Turniere beendet (übersprungen):  {grand_already_finished}")
+    print(f"  Arenas ignoriert (keine Team-Battles): {grand_skipped_arenas}")
     print("=" * 60)
 
 
