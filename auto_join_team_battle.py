@@ -55,7 +55,7 @@ TOKEN = os.environ.get("LICHESS_TOKEN", "DEIN_API_TOKEN_HIER")
 # Mapping: Ersteller-Username -> Liste der Teams, mit denen bei dessen
 # Turnieren beigetreten werden soll.
 CREATOR_TEAMS = {
-    "seyed111": ["darkonblitz-dob", "darkonteams],
+    "seyed111": ["darkonblitz-dob", "darkonteams"],
     "Nathanael01": ["DarkOnUltra", "DarkOnTeams"],
     "FRCCENTER": ["DarkOnVariants"],
 }
