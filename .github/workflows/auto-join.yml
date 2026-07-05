@@ -1,12 +1,33 @@
 name: Auto Join Team Battle
-
 permissions:
   contents: write   # nötig, damit der Workflow ins Repo zurückcommitten darf
-
 on:
+  # Wird von einem EXTERNEN Cron-Dienst (z.B. cron-job.org) alle 1-2 Minuten
+  # per API-Call ausgeloest. Umgeht damit GitHubs eigene, bei kurzen
+  # Intervallen unzuverlaessige "schedule"-Warteschlange.
+  #
+  # API-Call, den der externe Dienst regelmaessig ausfuehren muss:
+  #   POST https://api.github.com/repos/<owner>/<repo>/dispatches
+  #   Header: Authorization: Bearer <GitHub Personal Access Token, Scope "repo">
+  #           Accept: application/vnd.github+json
+  #   Body:   {"event_type": "auto-join-trigger"}
+  repository_dispatch:
+    types: [auto-join-trigger]
+
+  # Fallback / Backup, falls der externe Dienst mal ausfaellt - laeuft dann
+  # wenigstens alle 10 Minuten (mit den ueblichen GitHub-Verzoegerungen).
   schedule:
-    - cron: '*/10 * * * *'   # alle 10 Minuten
-  workflow_dispatch:          # manuell startbar über GitHub UI
+    - cron: '*/10 * * * *'
+
+  # Weiterhin manuell startbar über GitHub UI
+  workflow_dispatch:
+
+# Verhindert, dass sich mehrere gleichzeitig laufende Auesloeser
+# (repository_dispatch alle 1-2 Min + schedule + manuell) gegenseitig
+# ueberholen und doppelt committen/pushen.
+concurrency:
+  group: auto-join-team-battle
+  cancel-in-progress: false
 
 jobs:
   join:
@@ -14,12 +35,10 @@ jobs:
     steps:
       - name: Repo auschecken
         uses: actions/checkout@v4
-
       - name: Skript ausführen
         env:
           LICHESS_TOKEN: ${{ secrets.LICHESS_TOKEN }}
         run: python3 auto_join_team_battle.py
-
       - name: Aktualisierte seen_tournaments.json zurückcommitten
         run: |
           git config user.name "github-actions[bot]"
@@ -27,6 +46,7 @@ jobs:
           if [ -f seen_tournaments.json ]; then
             git add seen_tournaments.json
             git diff --staged --quiet || git commit -m "Update seen tournaments"
+            git pull --rebase
             git push
           else
             echo "seen_tournaments.json existiert nicht, überspringe Commit."
