@@ -55,9 +55,9 @@ TOKEN = os.environ.get("LICHESS_TOKEN", "DEIN_API_TOKEN_HIER")
 # Mapping: Ersteller-Username -> Liste der Teams, mit denen bei dessen
 # Turnieren beigetreten werden soll.
 CREATOR_TEAMS = {
-    "username1": ["DarkOnRapid"],
-    "username2": ["DarkOnSwiss", "DarkOnTeams"],
-    "username3": ["DarkonHahaha"],
+    "seyed111": ["darkonblitz-dob", "darkonteams],
+    "Nathanael01": ["DarkOnUltra", "DarkOnTeams"],
+    "FRCCENTER": ["DarkOnVariants"],
 }
 
 SEEN_FILE = Path("seen_tournaments.json")
