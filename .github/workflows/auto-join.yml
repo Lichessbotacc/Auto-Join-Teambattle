@@ -1,0 +1,28 @@
+name: Auto Join Team Battle
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'   # alle 15 Minuten
+  workflow_dispatch:          # manuell startbar über GitHub UI
+
+jobs:
+  join:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: Skript ausführen
+        env:
+          LICHESS_TOKEN: ${{ secrets.LICHESS_TOKEN }}
+          LICHESS_TEAM_ID: "schachfreunde-stuttgart"      # <- anpassen
+          LICHESS_CREATOR: "username_des_erstellers"       # <- anpassen
+        run: python3 auto_join_team_battle.py
+
+      - name: Aktualisierte seen_tournaments.json zurückcommitten
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add seen_tournaments.json
+          git diff --staged --quiet || git commit -m "Update seen tournaments"
+          git push
