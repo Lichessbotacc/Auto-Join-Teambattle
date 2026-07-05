@@ -1,8 +1,11 @@
 name: Auto Join Team Battle
 
+permissions:
+  contents: write   # nötig, damit der Workflow ins Repo zurückcommitten darf
+
 on:
   schedule:
-    - cron: '*/15 * * * *'   # alle 15 Minuten
+    - cron: '*/10 * * * *'   # alle 10 Minuten
   workflow_dispatch:          # manuell startbar über GitHub UI
 
 jobs:
@@ -15,8 +18,6 @@ jobs:
       - name: Skript ausführen
         env:
           LICHESS_TOKEN: ${{ secrets.LICHESS_TOKEN }}
-          LICHESS_TEAM_ID: "schachfreunde-stuttgart"      # <- anpassen
-          LICHESS_CREATOR: "username_des_erstellers"       # <- anpassen
         run: python3 auto_join_team_battle.py
 
       - name: Aktualisierte seen_tournaments.json zurückcommitten
