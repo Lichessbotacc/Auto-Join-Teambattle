@@ -309,9 +309,24 @@ def main() -> None:
             # Teams anhand der Zeitkontrolle filtern: ein Team wird nur
             # versucht, wenn kein Keyword gesetzt ist ODER das Keyword zur
             # erkannten Geschwindigkeit passt.
+            battle_teams = set()
+            team_battle_info = t.get("teamBattle")
+            if isinstance(team_battle_info, dict):
+                battle_teams = {
+                    tid.lower() for tid in team_battle_info.get("teams", {}).keys()
+                }
+
             applicable_teams = []
             skipped_teams = []
+            not_in_battle = []
             for tid in missing_teams:
+                if battle_teams and tid not in battle_teams:
+                    # Team ist bei diesem Team-Battle gar nicht als
+                    # teilnehmendes Team registriert -> Beitritt würde immer
+                    # mit HTTP 400 "Missing team" fehlschlagen. Kein Retry
+                    # sinnvoll, also als erledigt markieren.
+                    not_in_battle.append(tid)
+                    continue
                 required_speed = TEAM_KEYWORDS.get(tid)
                 if required_speed is None or required_speed == speed:
                     applicable_teams.append(tid)
@@ -333,10 +348,19 @@ def main() -> None:
             if skipped_teams:
                 skip_str = ", ".join(f"{tid} (erwartet: {req})" for tid, req in skipped_teams)
                 print(f"  Übersprungen (Zeitkontrolle passt nicht): {skip_str}")
+            if not_in_battle:
+                print(f"  Nicht Teil dieses Team-Battles (kein Beitritt möglich): "
+                      f"{', '.join(not_in_battle)}")
+                # Als erledigt markieren, damit nicht jeden Run erneut ein
+                # aussichtsloser Join-Versuch (HTTP 400 "Missing team")
+                # unternommen wird.
+                joined_teams.update(not_in_battle)
 
             if not applicable_teams:
                 print("  Kein passendes Team für diese Zeitkontrolle - "
                       "kein Beitritt in diesem Lauf.")
+                entry["joined_teams"] = sorted(joined_teams)
+                seen[t_id] = entry
                 continue
 
             print(f"  Trete bei mit {len(applicable_teams)} Team(s): "
