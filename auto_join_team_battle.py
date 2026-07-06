@@ -72,19 +72,19 @@ TOKEN = os.environ.get("LICHESS_TOKEN", "DEIN_API_TOKEN_HIER")
 # Turnieren beigetreten werden soll.
 CREATOR_TEAMS = {
     "seyed111": ["darkonblitz-dob", "darkonteams"],
-    "DarkOnCrack": ["darkonblitz-dob", "darkonteams", "german11"],
+    "DarkOnCrack": ["darkonblitz-dob", "german11", "darkonteams"],
     "Nathanael01": ["DarkOnUltra", "DarkOnTeams"],
     "FRCCENTER": ["DarkOnVariants"],
     "Gouravprithyani": ["DarkOnBlitz-dob", "german11"],
     "shadow_ghost66": ["Darkonblitz-dob", "german11"],
     "Arseniy_Rybasov": ["DarkOnUltra", "DarkOnTeams"],
     "Experimentator1": ["DarkOnBullet", "DarkOnBlitz-dob", "DarkOnTeams"],
-    "Jeffforever": ["DarkOnBlitz-dob", "darkonswiss-dos", "darkonteams", "darkonrapid", "german11", "darkonclassical", "darkonleagues"],
-    "kombinator02": ["DarkOnTeams", "DarkOnRapid"],
-    "Sy_Idus": ["DarkOnTeams", "german11", "DarkOnBullt"],
-    "Gloria1959": ["DarkOnTeams", "DarkOnClassical"],
+    "Jeffforever": ["DarkOnBlitz-dob", "darkonswiss-dos", "darkonrapid", "german11", "darkonclassical", "darkonleagues", "darkonteams"],
+    "kombinator02": ["DarkOnRapid", "DarkOnTeams"],
+    "Sy_Idus": ["german11", "DarkOnBullt", "DarkOnTeams"],
+    "Gloria1959": ["DarkOnClassical", "DarkOnTeams"],
     "Lichess": ["DarkOnVariants"],
-    "Ezrg94": ["DarkOnTeams", "DarkOnBlitz-dob", "DarkOnRapid", "DarkOnBullt"],
+    "Ezrg94": ["DarkOnBlitz-dob", "DarkOnRapid", "DarkOnBullt", "DarkOnTeams"],
 }
 
 # Mapping: Team-ID -> erforderliche Geschwindigkeits-Kategorie (basierend auf
