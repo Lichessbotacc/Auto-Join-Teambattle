@@ -85,6 +85,10 @@ CREATOR_TEAMS = {
     "Gloria1959": ["DarkOnClassical", "DarkOnTeams"],
     "Lichess": ["DarkOnVariants"],
     "Ezrg94": ["DarkOnBlitz-dob", "DarkOnRapid", "DarkOnBullt", "DarkOnTeams"],
+    "AtoAntRac": ["DarkOnVariants"],
+    "jorgeeespinoza": ["DarkOnBlitz-dob", "darkonswiss-dos", "darkonrapid", "german11", "darkonclassical","darkonbullt", "darkonteams"],
+    "AtomicOverseer": ["DarkOnVariants"],
+    "TS111": ["darkonblitz-dob"],
 }
 
 # Mapping: Team-ID -> erforderliche Geschwindigkeits-Kategorie (basierend auf
