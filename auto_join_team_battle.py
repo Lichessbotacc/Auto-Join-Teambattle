@@ -312,9 +312,11 @@ def main() -> None:
             battle_teams = set()
             team_battle_info = t.get("teamBattle")
             if isinstance(team_battle_info, dict):
-                battle_teams = {
-                    tid.lower() for tid in team_battle_info.get("teams", {}).keys()
-                }
+                teams_field = team_battle_info.get("teams", [])
+                if isinstance(teams_field, dict):
+                    battle_teams = {tid.lower() for tid in teams_field.keys()}
+                elif isinstance(teams_field, list):
+                    battle_teams = {tid.lower() for tid in teams_field}
 
             applicable_teams = []
             skipped_teams = []
