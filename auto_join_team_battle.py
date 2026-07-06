@@ -60,7 +60,7 @@ import os
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -85,10 +85,6 @@ CREATOR_TEAMS = {
     "Gloria1959": ["DarkOnClassical", "DarkOnTeams"],
     "Lichess": ["DarkOnVariants"],
     "Ezrg94": ["DarkOnBlitz-dob", "DarkOnRapid", "DarkOnBullt", "DarkOnTeams"],
-    "AtoAntRac": ["DarkOnVariants"],
-    "jorgeeespinoza": ["DarkOnBlitz-dob", "darkonswiss-dos", "darkonrapid", "german11", "darkonclassical","darkonbullt", "darkonteams"],
-    "AtomicOverseer": ["DarkOnVariants"],
-    "TS111": ["darkonblitz-dob"],
 }
 
 # Mapping: Team-ID -> erforderliche Geschwindigkeits-Kategorie (basierend auf
@@ -129,6 +125,18 @@ def classify_speed(clock: dict) -> str:
     return "classical"
 
 SEEN_FILE = Path("seen_tournaments.json")
+
+# Ersteller, die nicht bei jedem Lauf neu abgefragt werden sollen, sondern
+# nur alle X Tage (z.B. weil sie extrem viele Turniere anlegen und das
+# Rate-Limit / die Laufzeit unnötig belasten). Mapping: Username (klein-
+# geschrieben) -> Mindestabstand in Tagen zwischen zwei Abfragen.
+REDUCED_CHECK_INTERVAL_DAYS = {
+    "jeffforever": 2,
+}
+
+# Meta-Key in seen_tournaments.json, unter dem die letzten Check-Zeitpunkte
+# pro Ersteller gespeichert werden.
+LAST_CHECKED_KEY = "_last_checked"
 
 # Team-IDs und Usernamen zur Sicherheit auf Kleinbuchstaben normalisieren
 # (Lichess-IDs sind intern case-insensitive, aber so gehen wir auf Nummer
@@ -250,6 +258,21 @@ def main() -> None:
         print()
         print(f"### Ersteller: '{creator}' -> Teams: {', '.join(team_ids)}")
 
+        interval_days = REDUCED_CHECK_INTERVAL_DAYS.get(creator)
+        if interval_days is not None:
+            last_checked_raw = seen.get(LAST_CHECKED_KEY, {}).get(creator)
+            if last_checked_raw:
+                try:
+                    last_checked = datetime.fromisoformat(last_checked_raw)
+                    if datetime.now(timezone.utc) - last_checked < timedelta(days=interval_days):
+                        remaining = timedelta(days=interval_days) - (datetime.now(timezone.utc) - last_checked)
+                        print(f"  Übersprungen - '{creator}' wird nur alle {interval_days} Tage "
+                              f"geprüft (letzter Check: {last_checked_raw}, "
+                              f"noch ca. {remaining} bis zum nächsten Check).")
+                        continue
+                except ValueError:
+                    pass  # kaputter/fehlender Zeitstempel -> normal weitermachen
+
         try:
             tournaments = get_created_tournaments(creator)
         except RateLimitError as exc:
@@ -263,6 +286,9 @@ def main() -> None:
             continue
 
         print(f"{len(tournaments)} Turnier(e) insgesamt von '{creator}' gefunden.")
+
+        if interval_days is not None:
+            seen.setdefault(LAST_CHECKED_KEY, {})[creator] = datetime.now(timezone.utc).isoformat()
 
         for t in tournaments:
             t_id = t.get("id")
