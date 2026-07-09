@@ -321,6 +321,13 @@ def main() -> None:
             # falls es für diesen Ersteller konfiguriert ist.
             final_team = "darkonteams" if "darkonteams" in team_ids else None
 
+            # Wurde final_team für dieses Turnier schon einmal GARANTIERT
+            # als letzter Beitritt bestätigt (per explizitem Re-Join unten)?
+            # Ältere seen_tournaments.json-Einträge (von vor diesem Fix)
+            # haben dieses Flag noch nicht -> werden unten einmalig nachsynct,
+            # auch wenn laut "joined_teams" schon alles erledigt aussah.
+            final_synced = entry.get("final_synced", False)
+
             # Teams, die für dieses Turnier noch fehlen (in der Reihenfolge,
             # wie sie in CREATOR_TEAMS konfiguriert sind).
             missing_teams = [tid for tid in team_ids if tid not in joined_teams]
@@ -329,7 +336,9 @@ def main() -> None:
                 grand_already_finished += 1
                 continue
 
-            if not missing_teams:
+            needs_final_catchup = final_team is not None and not final_synced
+
+            if not missing_teams and not needs_final_catchup:
                 # Für dieses Turnier sind bereits alle Teams beigetreten.
                 # (Das Invariant "final_team ist der zuletzt erfolgte Beitritt"
                 # wird unten am Ende jedes Laufs sichergestellt, falls in
@@ -408,15 +417,16 @@ def main() -> None:
                 # unternommen wird.
                 joined_teams.update(not_in_battle)
 
-            if not applicable_teams:
+            if not applicable_teams and not needs_final_catchup:
                 print("  Kein passendes Team für diese Zeitkontrolle - "
                       "kein Beitritt in diesem Lauf.")
                 entry["joined_teams"] = sorted(joined_teams)
                 seen[t_id] = entry
                 continue
 
-            print(f"  Trete bei mit {len(applicable_teams)} Team(s): "
-                  f"{', '.join(applicable_teams)}")
+            if applicable_teams:
+                print(f"  Trete bei mit {len(applicable_teams)} Team(s): "
+                      f"{', '.join(applicable_teams)}")
 
             newly_joined_order = []
             for team_id in applicable_teams:
@@ -440,18 +450,22 @@ def main() -> None:
                     grand_join_fail += 1
 
             # Bei einem Lichess-Team-Battle gewinnt immer der zeitlich
-            # letzte Beitritt. Wenn final_team (i.d.R. "darkonteams") schon
-            # aus einem früheren Lauf als beigetreten gilt, in diesem Lauf
-            # aber noch ein ANDERES Team neu beigetreten ist, würde das den
-            # alten "darkonteams"-Beitritt auf Lichess überschreiben, ohne
-            # dass wir das merken würden. Deshalb: final_team hier explizit
-            # erneut beitreten lassen, damit es garantiert der letzte
-            # tatsächliche Beitritt bleibt.
-            if (
-                final_team
-                and final_team not in not_in_battle
-                and newly_joined_order
-                and newly_joined_order[-1] != final_team
+            # letzte Beitritt. Zwei Fälle, in denen final_team (i.d.R.
+            # "darkonteams") erneut beigetreten werden muss, damit es
+            # garantiert der letzte tatsächliche Beitritt bleibt:
+            #  1) In diesem Lauf ist noch ein ANDERES Team neu beigetreten
+            #     (das würde sonst final_team auf Lichess überschreiben).
+            #  2) Einmaliger Nachsync für ältere seen_tournaments.json-
+            #     Einträge (von vor diesem Fix), bei denen wir noch nicht
+            #     bestätigt haben, dass final_team wirklich zuletzt kam.
+            if final_team and newly_joined_order and newly_joined_order[-1] == final_team:
+                # final_team war ohnehin schon das letzte in diesem Lauf
+                # beigetretene Team - kein Nachsync nötig.
+                entry["final_synced"] = True
+
+            if final_team and final_team not in not_in_battle and (
+                (newly_joined_order and newly_joined_order[-1] != final_team)
+                or needs_final_catchup
             ):
                 print(f"  Sichere finale Zuordnung: trete erneut mit "
                       f"'{final_team}' bei (damit es der letzte Beitritt bleibt).")
@@ -469,8 +483,15 @@ def main() -> None:
                 if success:
                     joined_teams.add(final_team)
                     grand_join_ok += 1
+                    entry["final_synced"] = True
                 else:
                     grand_join_fail += 1
+                    # Fehlgeschlagen (nicht Rate-Limit) - beim nächsten Lauf
+                    # erneut versuchen, final_synced bleibt False.
+            elif final_team is None or final_team in not_in_battle:
+                # Kein final_team konfiguriert, oder es ist bei diesem
+                # Battle gar nicht teilnahmeberechtigt -> nichts zu syncen.
+                entry["final_synced"] = True
 
             entry["joined_teams"] = sorted(joined_teams)
             seen[t_id] = entry
