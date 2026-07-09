@@ -70,26 +70,32 @@ TOKEN = os.environ.get("LICHESS_TOKEN", "DEIN_API_TOKEN_HIER")
 
 # Mapping: Ersteller-Username -> Liste der Teams, mit denen bei dessen
 # Turnieren beigetreten werden soll.
+# WICHTIG: Bei einem Team-Battle kann man pro Turnier immer nur einem Team
+# gleichzeitig zugeordnet sein - jeder weitere Beitritt überschreibt den
+# vorherigen. Die Reihenfolge in der Liste ist daher wichtig: Das zuletzt
+# aufgeführte Team ist am Ende das, bei dem der Account tatsächlich steht.
+# "darkonteams" steht deshalb überall, wo es konfiguriert ist, bewusst an
+# letzter Stelle.
 CREATOR_TEAMS = {
-    "seyed111": ["darkonblitz-dob", "darkonteams"],
-    "DarkOnCrack": ["darkonblitz-dob", "german11", "darkonteams"],
-    "Nathanael01": ["DarkOnUltra", "DarkOnTeams"],
-    "FRCCENTER": ["DarkOnVariants"],
-    "Gouravprithyani": ["DarkOnBlitz-dob", "german11"],
-    "shadow_ghost66": ["Darkonblitz-dob", "german11"],
-    "Arseniy_Rybasov": ["DarkOnUltra", "DarkOnTeams"],
-    "Experimentator1": ["DarkOnBullet", "DarkOnBlitz-dob", "DarkOnTeams"],
+    "seyed111": ["darkonblitz-dob", "darkonswiss-dos", "darkonteams"],
+    "DarkOnCrack": ["darkonblitz-dob", "german11", "darkonswiss-dos", "darkonteams"],
+    "Nathanael01": ["darkonswiss-dos", "DarkOnUltra", "DarkOnTeams"],
+    "FRCCENTER": ["DarkOnVariants", "darkonswiss-dos"],
+    "Gouravprithyani": ["DarkOnBlitz-dob", "german11", "darkonswiss-dos"],
+    "shadow_ghost66": ["Darkonblitz-dob", "german11", "darkonswiss-dos"],
+    "Arseniy_Rybasov": ["darkonswiss-dos", "DarkOnUltra", "DarkOnTeams"],
+    "Experimentator1": ["DarkOnBullet", "DarkOnBlitz-dob", "darkonswiss-dos", "DarkOnTeams"],
     "Jeffforever": ["DarkOnBlitz-dob", "darkonswiss-dos", "darkonrapid", "german11", "darkonclassical", "darkonleagues", "darkonteams"],
-    "kombinator02": ["DarkOnRapid", "DarkOnTeams"],
-    "Sy_Idus": ["german11", "DarkOnBullt", "DarkOnTeams"],
-    "Gloria1959": ["DarkOnClassical", "DarkOnTeams"],
-    "Lichess": ["DarkOnVariants"],
-    "Ezrg94": ["DarkOnBlitz-dob", "DarkOnRapid", "DarkOnBullt", "DarkOnTeams"],
-    "M_milan2015": ["DarkOnRapid"],
-    "Kurt_rohrer56": ["DarkOnClassical"],
-    "Abyin2000": ["DarkOnRapid", "DarkOnClassical"],
-    "jorgeeespinoza": ["DarkOnBullt", "DarkOnClassical", "DarkOnRapid"],
-    "Alexander_Savchenko": ["DarkOnRapid"],
+    "kombinator02": ["darkonswiss-dos", "DarkOnRapid", "DarkOnTeams"],
+    "Sy_Idus": ["german11", "DarkOnBullt", "darkonswiss-dos", "DarkOnTeams"],
+    "Gloria1959": ["darkonswiss-dos", "DarkOnClassical", "DarkOnTeams"],
+    "Lichess": ["DarkOnVariants", "darkonswiss-dos"],
+    "Ezrg94": ["DarkOnBlitz-dob", "DarkOnRapid", "DarkOnBullt", "darkonswiss-dos", "DarkOnTeams"],
+    "M_milan2015": ["DarkOnRapid", "darkonswiss-dos"],
+    "Kurt_rohrer56": ["DarkOnClassical", "darkonswiss-dos"],
+    "Abyin2000": ["DarkOnRapid", "DarkOnClassical", "darkonswiss-dos"],
+    "jorgeeespinoza": ["DarkOnBullt", "DarkOnClassical", "DarkOnRapid", "darkonswiss-dos"],
+    "Alexander_Savchenko": ["DarkOnRapid", "darkonswiss-dos"],
 }
 
 # Mapping: Team-ID -> erforderliche Geschwindigkeits-Kategorie (basierend auf
@@ -136,7 +142,7 @@ SEEN_FILE = Path("seen_tournaments.json")
 # Rate-Limit / die Laufzeit unnötig belasten). Mapping: Username (klein-
 # geschrieben) -> Mindestabstand in Tagen zwischen zwei Abfragen.
 REDUCED_CHECK_INTERVAL_DAYS = {
-    "jeffforever": 2,
+    "jeffforever": 1,
 }
 
 # Meta-Key in seen_tournaments.json, unter dem die letzten Check-Zeitpunkte
@@ -310,7 +316,8 @@ def main() -> None:
             entry = seen.get(t_id, {"finished": False, "joined_teams": []})
             joined_teams = set(entry.get("joined_teams", []))
 
-            # Teams, die für dieses Turnier noch fehlen
+            # Teams, die für dieses Turnier noch fehlen (in der Reihenfolge,
+            # wie sie in CREATOR_TEAMS konfiguriert sind).
             missing_teams = [tid for tid in team_ids if tid not in joined_teams]
 
             if entry.get("finished"):
