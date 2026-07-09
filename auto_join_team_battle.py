@@ -96,6 +96,7 @@ CREATOR_TEAMS = {
     "Abyin2000": ["DarkOnRapid", "DarkOnClassical", "darkonswiss-dos"],
     "jorgeeespinoza": ["DarkOnBullt", "DarkOnClassical", "DarkOnRapid", "darkonswiss-dos"],
     "Alexander_Savchenko": ["DarkOnRapid", "darkonswiss-dos"],
+    "cormacobear": ["german11", "darkonleagues", "darkonbullt", "darkonswiss-dos", "darkonteams"],
 }
 
 # Mapping: Team-ID -> erforderliche Geschwindigkeits-Kategorie (basierend auf
