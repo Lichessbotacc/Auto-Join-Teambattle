@@ -316,6 +316,11 @@ def main() -> None:
             entry = seen.get(t_id, {"finished": False, "joined_teams": []})
             joined_teams = set(entry.get("joined_teams", []))
 
+            # Team, das am Ende "gewinnen" soll (letzter Beitritt zählt bei
+            # Lichess-Team-Battles). Aktuell fest auf "darkonteams" gesetzt,
+            # falls es für diesen Ersteller konfiguriert ist.
+            final_team = "darkonteams" if "darkonteams" in team_ids else None
+
             # Teams, die für dieses Turnier noch fehlen (in der Reihenfolge,
             # wie sie in CREATOR_TEAMS konfiguriert sind).
             missing_teams = [tid for tid in team_ids if tid not in joined_teams]
@@ -325,7 +330,10 @@ def main() -> None:
                 continue
 
             if not missing_teams:
-                # Für dieses Turnier sind bereits alle Teams beigetreten
+                # Für dieses Turnier sind bereits alle Teams beigetreten.
+                # (Das Invariant "final_team ist der zuletzt erfolgte Beitritt"
+                # wird unten am Ende jedes Laufs sichergestellt, falls in
+                # einem Lauf noch etwas Neues dazukam.)
                 grand_already_done += 1
                 continue
 
@@ -410,6 +418,7 @@ def main() -> None:
             print(f"  Trete bei mit {len(applicable_teams)} Team(s): "
                   f"{', '.join(applicable_teams)}")
 
+            newly_joined_order = []
             for team_id in applicable_teams:
                 try:
                     success = join_tournament(t_id, team_id)
@@ -424,8 +433,42 @@ def main() -> None:
 
                 if success:
                     joined_teams.add(team_id)
+                    newly_joined_order.append(team_id)
                     grand_join_ok += 1
                     grand_new_joins += 1
+                else:
+                    grand_join_fail += 1
+
+            # Bei einem Lichess-Team-Battle gewinnt immer der zeitlich
+            # letzte Beitritt. Wenn final_team (i.d.R. "darkonteams") schon
+            # aus einem früheren Lauf als beigetreten gilt, in diesem Lauf
+            # aber noch ein ANDERES Team neu beigetreten ist, würde das den
+            # alten "darkonteams"-Beitritt auf Lichess überschreiben, ohne
+            # dass wir das merken würden. Deshalb: final_team hier explizit
+            # erneut beitreten lassen, damit es garantiert der letzte
+            # tatsächliche Beitritt bleibt.
+            if (
+                final_team
+                and final_team not in not_in_battle
+                and newly_joined_order
+                and newly_joined_order[-1] != final_team
+            ):
+                print(f"  Sichere finale Zuordnung: trete erneut mit "
+                      f"'{final_team}' bei (damit es der letzte Beitritt bleibt).")
+                try:
+                    success = join_tournament(t_id, final_team)
+                except RateLimitError as exc:
+                    print(f"[RATE LIMIT] {exc}")
+                    print("Breche Skript sofort ab. Nächster Versuch beim "
+                          "nächsten geplanten Lauf (z.B. in 15 Minuten).")
+                    entry["joined_teams"] = sorted(joined_teams)
+                    seen[t_id] = entry
+                    save_seen(seen)
+                    return
+
+                if success:
+                    joined_teams.add(final_team)
+                    grand_join_ok += 1
                 else:
                     grand_join_fail += 1
 
