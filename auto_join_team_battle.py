@@ -237,6 +237,38 @@ def join_tournament(tournament_id: str, team_id: str) -> bool:
         return False
 
 
+def withdraw_tournament(tournament_id: str) -> bool:
+    """
+    Verlässt ein Turnier komplett (POST /api/tournament/{id}/withdraw).
+
+    Notwendig, weil ein erneuter /join-Aufruf mit einem anderen Team einen
+    bestehenden Team-Battle-Beitritt NICHT zuverlässig überschreibt - Lichess
+    kann den Spieler beim alten Team belassen. Daher: erst withdraw, dann
+    mit dem gewünschten (finalen) Team neu beitreten.
+    """
+    url = f"{BASE_URL}/api/tournament/{tournament_id}/withdraw"
+    req = urllib.request.Request(url, data=b"", headers=HEADERS, method="POST")
+
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            if resp.status == 200:
+                print(f"  [OK]     Turnier {tournament_id} verlassen (für Team-Wechsel).")
+                return True
+            print(f"  [FEHLER] Verlassen von Turnier {tournament_id} -> HTTP {resp.status}")
+            return False
+    except urllib.error.HTTPError as exc:
+        if exc.code == 429:
+            raise RateLimitError(
+                f"Rate Limit beim Verlassen von Turnier {tournament_id}"
+            ) from exc
+        body = exc.read().decode("utf-8", errors="replace")
+        print(f"  [FEHLER] Verlassen von Turnier {tournament_id} -> HTTP {exc.code}: {body}")
+        return False
+    except urllib.error.URLError as exc:
+        print(f"  [FEHLER] Verlassen von Turnier {tournament_id} -> Netzwerkproblem: {exc}")
+        return False
+
+
 def format_starts_at(t: dict) -> str:
     """Formatiert den Startzeitpunkt eines Turniers menschenlesbar (lokale Zeit)."""
     ms = t.get("startsAt")
@@ -327,7 +359,7 @@ def main() -> None:
             # Ältere seen_tournaments.json-Einträge (von vor diesem Fix)
             # haben dieses Flag noch nicht -> werden unten einmalig nachsynct,
             # auch wenn laut "joined_teams" schon alles erledigt aussah.
-            final_synced = entry.get("final_synced", False)
+            final_synced_v2 = entry.get("final_synced_v2", False)
 
             # Teams, die für dieses Turnier noch fehlen (in der Reihenfolge,
             # wie sie in CREATOR_TEAMS konfiguriert sind).
@@ -337,7 +369,7 @@ def main() -> None:
                 grand_already_finished += 1
                 continue
 
-            needs_final_catchup = final_team is not None and not final_synced
+            needs_final_catchup = final_team is not None and not final_synced_v2
 
             if not missing_teams and not needs_final_catchup:
                 # Für dieses Turnier sind bereits alle Teams beigetreten.
@@ -430,7 +462,24 @@ def main() -> None:
                       f"{', '.join(applicable_teams)}")
 
             newly_joined_order = []
+            already_assigned = bool(joined_teams - set(not_in_battle))
             for team_id in applicable_teams:
+                if already_assigned:
+                    # Es ist schon ein anderes Team für dieses Turnier aktiv
+                    # zugeordnet - erst verlassen, damit der neue Beitritt
+                    # das Team auch wirklich wechselt (ein reiner /join-Call
+                    # überschreibt die Zuordnung nicht immer zuverlässig).
+                    try:
+                        withdraw_tournament(t_id)
+                    except RateLimitError as exc:
+                        print(f"[RATE LIMIT] {exc}")
+                        print("Breche Skript sofort ab. Nächster Versuch beim "
+                              "nächsten geplanten Lauf (z.B. in 15 Minuten).")
+                        entry["joined_teams"] = sorted(joined_teams)
+                        seen[t_id] = entry
+                        save_seen(seen)
+                        return
+
                 try:
                     success = join_tournament(t_id, team_id)
                 except RateLimitError as exc:
@@ -447,6 +496,7 @@ def main() -> None:
                     newly_joined_order.append(team_id)
                     grand_join_ok += 1
                     grand_new_joins += 1
+                    already_assigned = True
                 else:
                     grand_join_fail += 1
 
@@ -462,14 +512,26 @@ def main() -> None:
             if final_team and newly_joined_order and newly_joined_order[-1] == final_team:
                 # final_team war ohnehin schon das letzte in diesem Lauf
                 # beigetretene Team - kein Nachsync nötig.
-                entry["final_synced"] = True
+                entry["final_synced_v2"] = True
 
             if final_team and final_team not in not_in_battle and (
                 (newly_joined_order and newly_joined_order[-1] != final_team)
                 or needs_final_catchup
             ):
-                print(f"  Sichere finale Zuordnung: trete erneut mit "
-                      f"'{final_team}' bei (damit es der letzte Beitritt bleibt).")
+                print(f"  Sichere finale Zuordnung: verlasse Turnier und trete "
+                      f"erneut mit '{final_team}' bei (damit es das aktive "
+                      f"Team bleibt).")
+                try:
+                    withdraw_tournament(t_id)
+                except RateLimitError as exc:
+                    print(f"[RATE LIMIT] {exc}")
+                    print("Breche Skript sofort ab. Nächster Versuch beim "
+                          "nächsten geplanten Lauf (z.B. in 15 Minuten).")
+                    entry["joined_teams"] = sorted(joined_teams)
+                    seen[t_id] = entry
+                    save_seen(seen)
+                    return
+
                 try:
                     success = join_tournament(t_id, final_team)
                 except RateLimitError as exc:
@@ -484,15 +546,15 @@ def main() -> None:
                 if success:
                     joined_teams.add(final_team)
                     grand_join_ok += 1
-                    entry["final_synced"] = True
+                    entry["final_synced_v2"] = True
                 else:
                     grand_join_fail += 1
                     # Fehlgeschlagen (nicht Rate-Limit) - beim nächsten Lauf
-                    # erneut versuchen, final_synced bleibt False.
+                    # erneut versuchen, final_synced_v2 bleibt False.
             elif final_team is None or final_team in not_in_battle:
                 # Kein final_team konfiguriert, oder es ist bei diesem
                 # Battle gar nicht teilnahmeberechtigt -> nichts zu syncen.
-                entry["final_synced"] = True
+                entry["final_synced_v2"] = True
 
             entry["joined_teams"] = sorted(joined_teams)
             seen[t_id] = entry
