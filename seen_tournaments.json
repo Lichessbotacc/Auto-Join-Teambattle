@@ -4766,8 +4766,10 @@
     "joined_teams": []
   },
   "1W2qpe0v": {
+    "final_synced_v2": true,
     "finished": false,
     "joined_teams": [
+      "darkonrapid",
       "darkonswiss-dos"
     ]
   },
@@ -53873,6 +53875,16 @@
   "H8cuEidF": {
     "finished": true,
     "joined_teams": []
+  },
+  "H8dPnAWB": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonbullt",
+      "darkonswiss-dos",
+      "darkonteams",
+      "german11"
+    ]
   },
   "H8h2NH98": {
     "finished": true,
@@ -146525,6 +146537,14 @@
   "kLJIQRqa": {
     "finished": true,
     "joined_teams": []
+  },
+  "kLQqZIgl": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonrapid",
+      "darkonswiss-dos"
+    ]
   },
   "kLRdVIpn": {
     "finished": true,
