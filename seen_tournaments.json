@@ -6826,6 +6826,17 @@
     "finished": true,
     "joined_teams": []
   },
+  "2EOMplAz": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonblitz-dob",
+      "darkonbullt",
+      "darkonrapid",
+      "darkonswiss-dos",
+      "darkonteams"
+    ]
+  },
   "2EX4uScP": {
     "finished": true,
     "joined_teams": []
@@ -12783,6 +12794,7 @@
     "final_synced_v2": true,
     "finished": false,
     "joined_teams": [
+      "darkonblitz-dob",
       "darkonbullt",
       "darkonrapid",
       "darkonswiss-dos",
@@ -86373,6 +86385,17 @@
     "finished": true,
     "joined_teams": []
   },
+  "REPARXG5": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonblitz-dob",
+      "darkonbullt",
+      "darkonrapid",
+      "darkonswiss-dos",
+      "darkonteams"
+    ]
+  },
   "REWT4osV": {
     "finished": false,
     "joined_teams": [
@@ -146742,6 +146765,17 @@
     "finished": false,
     "joined_teams": [
       "darkonblitz-dob",
+      "darkonswiss-dos",
+      "darkonteams"
+    ]
+  },
+  "kJSrd0Rq": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonblitz-dob",
+      "darkonbullt",
+      "darkonrapid",
       "darkonswiss-dos",
       "darkonteams"
     ]
