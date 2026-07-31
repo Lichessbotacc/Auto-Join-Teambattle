@@ -116353,6 +116353,13 @@
     "finished": true,
     "joined_teams": []
   },
+  "Zsk97R66": {
+    "finished": false,
+    "joined_teams": [
+      "darkonrapid",
+      "darkonswiss-dos"
+    ]
+  },
   "Zt3JtIZ8": {
     "finished": true,
     "joined_teams": []
@@ -198119,6 +198126,15 @@
   "z1J44XwJ": {
     "finished": true,
     "joined_teams": []
+  },
+  "z1KNYsHB": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonclassical",
+      "darkonswiss-dos",
+      "darkonteams"
+    ]
   },
   "z1LB7fIp": {
     "finished": true,
