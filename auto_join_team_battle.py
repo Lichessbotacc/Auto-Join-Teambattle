@@ -100,6 +100,7 @@ CREATOR_TEAMS = {
     "Eribertoperez": ["darkonblitz-dob"],
     "Skymongol": ["darkonblitz-dob"],
     "dvsuhov": ["darkonvariants"],
+    "Renoir1718": ["darkonvariants"],
 }
 
 # Mapping: Team-ID -> erforderliche Geschwindigkeits-Kategorie (basierend auf
