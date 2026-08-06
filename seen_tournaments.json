@@ -124819,10 +124819,12 @@
     "joined_teams": []
   },
   "c2wT9gHG": {
+    "final_synced_v2": true,
     "finished": false,
     "joined_teams": [
       "darkonblitz-dob",
-      "darkonswiss-dos"
+      "darkonswiss-dos",
+      "darkonteams"
     ]
   },
   "c31AA0eG": {
