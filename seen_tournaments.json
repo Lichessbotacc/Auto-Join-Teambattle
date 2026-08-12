@@ -23719,7 +23719,7 @@
   },
   "7AglDWJD": {
     "final_synced_v2": true,
-    "finished": false,
+    "finished": true,
     "joined_teams": [
       "darkonbullet",
       "darkonbullt",
@@ -25799,6 +25799,13 @@
   "7qK3AA4A": {
     "finished": true,
     "joined_teams": []
+  },
+  "7qYSi2e2": {
+    "finished": false,
+    "joined_teams": [
+      "darkonrapid",
+      "darkonswiss-dos"
+    ]
   },
   "7qmtLAAt": {
     "finished": true,
