@@ -52432,7 +52432,7 @@
   },
   "FA3FToz7": {
     "final_synced_v2": true,
-    "finished": false,
+    "finished": true,
     "joined_teams": [
       "darkonbullt",
       "darkonswiss-dos",
@@ -95657,6 +95657,12 @@
     "finished": true,
     "joined_teams": []
   },
+  "Rd8OpAir": {
+    "finished": false,
+    "joined_teams": [
+      "darkonvariants"
+    ]
+  },
   "Rd99WVEw": {
     "finished": true,
     "joined_teams": []
@@ -126524,6 +126530,12 @@
   "aenmje08": {
     "finished": true,
     "joined_teams": []
+  },
+  "aeoo9IPr": {
+    "finished": false,
+    "joined_teams": [
+      "darkonvariants"
+    ]
   },
   "aerCXLk4": {
     "finished": true,
