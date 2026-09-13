@@ -206034,8 +206034,11 @@
     "joined_teams": []
   },
   "w44iqQWf": {
+    "final_synced_v2": true,
     "finished": false,
-    "joined_teams": []
+    "joined_teams": [
+      "darkonvariants"
+    ]
   },
   "w49r7TGC": {
     "finished": true,
