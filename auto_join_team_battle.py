@@ -81,7 +81,7 @@ CREATOR_TEAMS = {
     "DarkOnCrack": ["darkonblitz-dob", "german11", "darkonswiss-dos", "darkonteams"],
     "Nathanael01": ["darkonswiss-dos", "DarkOnUltra", "DarkOnTeams"],
     "FRCCENTER": ["DarkOnVariants", "darkonswiss-dos"],
-    "Gouravprithyani": ["DarkOnBlitz-dob", "german11", "darkonswiss-dos"],
+    "Gouravprithyani": ["german11", "darkonswiss-dos", "DarkOnBlitz-dob],
     "shadow_ghost66": ["Darkonblitz-dob", "german11", "darkonswiss-dos"],
     "Arseniy_Rybasov": ["darkonswiss-dos", "DarkOnUltra", "DarkOnTeams"],
     "Experimentator1": ["DarkOnBullt", "DarkOnBlitz-dob", "darkonswiss-dos", "DarkOnTeams"],
