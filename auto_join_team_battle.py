@@ -103,7 +103,8 @@ CREATOR_TEAMS = {
     "Renoir1718": ["darkonvariants"],
     "TS111": ["darkonblitz-dob", "german11"],
     "AtoAntRac": ["darkonvariants"],
-    "Sanna13": ["DarkOnRapid", "DarkOnClassical"]
+    "Sanna13": ["DarkOnRapid", "DarkOnClassical"],
+    "JulioBueno2030": ["DarkOnBlitz-dob", "DarkOnBullt"]
 }
 
 # Mapping: Team-ID -> erforderliche Geschwindigkeits-Kategorie (basierend auf
