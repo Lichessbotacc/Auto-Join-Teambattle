@@ -16526,9 +16526,12 @@
     "joined_teams": []
   },
   "4eDwGqF2": {
+    "final_synced_v2": true,
     "finished": false,
     "joined_teams": [
       "darkonblitz-dob",
+      "darkonswiss-dos",
+      "darkonteams",
       "german11"
     ]
   },
@@ -39230,6 +39233,16 @@
   "As8AfYoz": {
     "finished": true,
     "joined_teams": []
+  },
+  "AsGuesvg": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonblitz-dob",
+      "darkonswiss-dos",
+      "darkonteams",
+      "german11"
+    ]
   },
   "AsIg0TH8": {
     "finished": true,
