@@ -57683,6 +57683,10 @@
     "finished": true,
     "joined_teams": []
   },
+  "G5qGOHiM": {
+    "finished": false,
+    "joined_teams": []
+  },
   "G5rsFPuG": {
     "finished": true,
     "joined_teams": []
@@ -121360,6 +121364,13 @@
     "finished": true,
     "joined_teams": []
   },
+  "XcGjyBP7": {
+    "finished": false,
+    "joined_teams": [
+      "darkonswiss-dos",
+      "darkonultra"
+    ]
+  },
   "XcJSi5NZ": {
     "finished": true,
     "joined_teams": []
@@ -122182,6 +122193,10 @@
   },
   "XqxAQmqK": {
     "finished": true,
+    "joined_teams": []
+  },
+  "Xr1eAgfh": {
+    "finished": false,
     "joined_teams": []
   },
   "Xr7pgoG9": {
@@ -182660,6 +182675,10 @@
     "finished": true,
     "joined_teams": []
   },
+  "oR9p5WT3": {
+    "finished": false,
+    "joined_teams": []
+  },
   "oRBVhIw9": {
     "finished": true,
     "joined_teams": []
@@ -183591,6 +183610,15 @@
   "ognag6EY": {
     "finished": true,
     "joined_teams": []
+  },
+  "ogoA5qsA": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonswiss-dos",
+      "darkonteams",
+      "darkonultra"
+    ]
   },
   "ogtyp356": {
     "finished": true,
