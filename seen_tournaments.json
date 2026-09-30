@@ -108734,6 +108734,13 @@
       "german11"
     ]
   },
+  "TwoV9Afr": {
+    "finished": false,
+    "joined_teams": [
+      "darkonblitz-dob",
+      "darkonbullt"
+    ]
+  },
   "TwprOYXd": {
     "finished": true,
     "joined_teams": []
@@ -154437,7 +154444,7 @@
   },
   "gQ7zK9lr": {
     "final_synced_v2": true,
-    "finished": false,
+    "finished": true,
     "joined_teams": [
       "darkonbullt"
     ]
