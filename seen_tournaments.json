@@ -58185,8 +58185,13 @@
     "joined_teams": []
   },
   "G5qGOHiM": {
+    "final_synced_v2": true,
     "finished": false,
-    "joined_teams": []
+    "joined_teams": [
+      "darkonswiss-dos",
+      "darkonteams",
+      "darkonultra"
+    ]
   },
   "G5rsFPuG": {
     "finished": true,
