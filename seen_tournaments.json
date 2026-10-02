@@ -123588,8 +123588,13 @@
     "joined_teams": []
   },
   "Xr1eAgfh": {
+    "final_synced_v2": true,
     "finished": false,
-    "joined_teams": []
+    "joined_teams": [
+      "darkonswiss-dos",
+      "darkonteams",
+      "darkonultra"
+    ]
   },
   "Xr7pgoG9": {
     "finished": true,
