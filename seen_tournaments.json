@@ -13405,8 +13405,13 @@
     "joined_teams": []
   },
   "3iukW72B": {
+    "final_synced_v2": true,
     "finished": false,
-    "joined_teams": []
+    "joined_teams": [
+      "darkonswiss-dos",
+      "darkonteams",
+      "darkonultra"
+    ]
   },
   "3iwHV14K": {
     "finished": true,
