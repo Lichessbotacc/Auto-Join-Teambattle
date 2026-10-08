@@ -11013,6 +11013,12 @@
     "finished": true,
     "joined_teams": []
   },
+  "35MZNERc": {
+    "finished": false,
+    "joined_teams": [
+      "darkonblitz-dob"
+    ]
+  },
   "35NEvEO2": {
     "finished": true,
     "joined_teams": []
@@ -209231,6 +209237,13 @@
   "udMZrwkf": {
     "finished": true,
     "joined_teams": []
+  },
+  "udMcTnDI": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonvariants"
+    ]
   },
   "udNghJbw": {
     "final_synced_v2": true,
