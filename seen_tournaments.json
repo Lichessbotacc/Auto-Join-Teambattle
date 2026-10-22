@@ -51831,6 +51831,11 @@
     "finished": true,
     "joined_teams": []
   },
+  "DlTtDZIH": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": []
+  },
   "DlZMIoNL": {
     "finished": true,
     "joined_teams": []
@@ -60764,6 +60769,13 @@
   "GDfRbMMe": {
     "finished": true,
     "joined_teams": []
+  },
+  "GDhEYTj6": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonvariants"
+    ]
   },
   "GDmAtcAb": {
     "finished": true,
