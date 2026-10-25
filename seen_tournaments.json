@@ -27302,6 +27302,13 @@
     "finished": true,
     "joined_teams": []
   },
+  "7GJrX5rC": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonvariants"
+    ]
+  },
   "7GVX7a9A": {
     "finished": true,
     "joined_teams": []
@@ -52067,7 +52074,7 @@
   },
   "DlTtDZIH": {
     "final_synced_v2": true,
-    "finished": false,
+    "finished": true,
     "joined_teams": []
   },
   "DlZMIoNL": {
@@ -64254,6 +64261,16 @@
     "finished": true,
     "joined_teams": []
   },
+  "H4qqupXS": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonblitz-dob",
+      "darkonbullt",
+      "darkonswiss-dos",
+      "darkonteams"
+    ]
+  },
   "H4xwC0an": {
     "finished": true,
     "joined_teams": []
@@ -66672,6 +66689,13 @@
   "HeH4WGYa": {
     "finished": true,
     "joined_teams": []
+  },
+  "HeHUUNMo": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonvariants"
+    ]
   },
   "HeKaCyjd": {
     "final_synced_v2": true,
@@ -122108,6 +122132,16 @@
     "finished": true,
     "joined_teams": []
   },
+  "W9UqYvLT": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonblitz-dob",
+      "darkonbullt",
+      "darkonswiss-dos",
+      "darkonteams"
+    ]
+  },
   "W9XhGqMC": {
     "finished": true,
     "joined_teams": []
@@ -123542,6 +123576,13 @@
   "WYcLx1eK": {
     "finished": true,
     "joined_teams": []
+  },
+  "WYfEaqxB": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonvariants"
+    ]
   },
   "WYohCJAu": {
     "finished": true,
@@ -133090,6 +133131,15 @@
   "Z7dAE74i": {
     "finished": true,
     "joined_teams": []
+  },
+  "Z7e0KPUs": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonbullt",
+      "darkonswiss-dos",
+      "darkonteams"
+    ]
   },
   "Z7jWiL93": {
     "finished": true,
@@ -163500,10 +163550,13 @@
     "joined_teams": []
   },
   "h2MVzxHY": {
+    "final_synced_v2": true,
     "finished": false,
     "joined_teams": [
+      "darkonblitz-dob",
       "darkonbullt",
-      "darkonswiss-dos"
+      "darkonswiss-dos",
+      "darkonteams"
     ]
   },
   "h2PmU5sx": {
