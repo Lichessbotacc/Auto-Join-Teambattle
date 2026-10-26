@@ -21756,6 +21756,13 @@
     "finished": true,
     "joined_teams": []
   },
+  "5jb9jIOQ": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonblitz-dob"
+    ]
+  },
   "5jcn15MB": {
     "finished": true,
     "joined_teams": []
@@ -28834,6 +28841,13 @@
   "7g95prll": {
     "finished": true,
     "joined_teams": []
+  },
+  "7gAqy2ag": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonblitz-dob"
+    ]
   },
   "7gDMGjAs": {
     "finished": true,
@@ -44625,6 +44639,13 @@
     "finished": true,
     "joined_teams": []
   },
+  "BkkSQeIt": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonblitz-dob"
+    ]
+  },
   "BkpgZonE": {
     "finished": true,
     "joined_teams": []
@@ -48398,6 +48419,13 @@
   "CizebVgo": {
     "finished": true,
     "joined_teams": []
+  },
+  "Cj750MbF": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonblitz-dob"
+    ]
   },
   "CjC4NQtF": {
     "finished": true,
@@ -90898,6 +90926,13 @@
   "Nv3sIkjU": {
     "finished": true,
     "joined_teams": []
+  },
+  "Nv4gUOAr": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonblitz-dob"
+    ]
   },
   "Nv7xv1xW": {
     "finished": true,
@@ -168188,6 +168223,14 @@
     "finished": true,
     "joined_teams": []
   },
+  "iA7WI8wK": {
+    "final_synced_v2": true,
+    "finished": false,
+    "joined_teams": [
+      "darkonblitz-dob",
+      "german11"
+    ]
+  },
   "iA9rOspj": {
     "finished": true,
     "joined_teams": []
@@ -168965,8 +169008,11 @@
     "joined_teams": []
   },
   "iMuz6LjQ": {
+    "final_synced_v2": true,
     "finished": false,
-    "joined_teams": []
+    "joined_teams": [
+      "darkonblitz-dob"
+    ]
   },
   "iMv70Hwu": {
     "finished": true,
